@@ -1,0 +1,21 @@
+# Flutter: http hard
+@'
+// http_hard_INSEGURO.dart
+// ❌ Cliente HTTP que acepta cualquier certificado (MITM), sin timeouts ni validación.
+import 'dart:io';
+
+Future<void> fetch() async {
+  final client = HttpClient();
+  // ❌ Bypass total de TLS
+  client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+
+  final request = await client.getUrl(Uri.parse('https://api.banco.local/secure'));
+  final response = await request.close();
+  final content = await response.transform(SystemEncoding().decoder).join();
+  print(content);
+}
+
+void main() async {
+  await fetch();
+}
+'@ | Set-Content -Path (Join-Path $Flu "http_hard_INSEGURO.dart") -Encoding UTF8
