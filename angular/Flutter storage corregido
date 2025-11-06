@@ -1,0 +1,24 @@
+REM --- Flutter: Storage CORREGIDO ---
+> "%FLU%\storage_easy_CORREGIDO.dart" (
+  echo // storage_easy_CORREGIDO.dart
+  echo // ^✅ No almacenar secretos en texto plano; no loguear credenciales.
+  echo // ^💡 En app real reemplazar por flutter_secure_storage.
+  echo class SecureKv {
+  echo   final Map^<String, String^> _db = {};
+  echo   Future^<void^> write(String key, String value) async {
+  echo     _db[key] = "***CIFRADO***" + value; // mock cifrado
+  echo   }
+  echo   Future^<String^?> read(String key) async ^=> _db[key];
+  echo }
+  echo
+  echo final secure = SecureKv();
+  echo
+  echo Future^<void^> saveCredentials(String user, String password) async {
+  echo   await secure.write('user', user);
+  echo   await secure.write('pass', password);
+  echo }
+  echo
+  echo void main() async {
+  echo   await saveCredentials('demo', 'N3xa@123');
+  echo }
+)
