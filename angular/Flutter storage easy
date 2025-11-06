@@ -1,0 +1,16 @@
+# Flutter: storage easy
+@'
+// storage_easy_INSEGURO.dart
+// ❌ Guarda credenciales en texto plano y las imprime en logs.
+import 'dart:io';
+
+Future<void> saveCredentials(String user, String password) async {
+  final file = File('/storage/emulated/0/cred.txt');
+  await file.writeAsString('user=' + user + '\npass=' + password); // ❌ texto plano
+  print('Credenciales guardadas en: ' + file.path + ' con pass=' + password); // ❌ log con secreto
+}
+
+void main() async {
+  await saveCredentials('demo', 'N3xa@123');
+}
+'@ | Set-Content -Path (Join-Path $Flu "storage_easy_INSEGURO.dart") -Encoding UTF8
