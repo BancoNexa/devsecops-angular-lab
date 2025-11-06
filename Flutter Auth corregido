@@ -1,0 +1,33 @@
+REM --- Flutter: Auth CORREGIDO ---
+> "%FLU%\auth_medium_CORREGIDO.dart" (
+  echo // auth_medium_CORREGIDO.dart
+  echo // ^✅ Sin backdoor. Token en header Authorization. Timeout y expiracion simulada.
+  echo import 'dart:convert';
+  echo import 'package:http/http.dart' as http;
+  echo
+  echo bool login(String username, String password) {
+  echo   return username.isNotEmpty ^&^& password.length ^>= 8;
+  echo }
+  echo
+  echo bool isExpired(int expEpoch) ^=> expEpoch ^< (DateTime.now().millisecondsSinceEpoch ~/ 1000);
+  echo
+  echo Future^<void^> callApi(String jwt, {int expEpoch = 0}) async {
+  echo   if (jwt.isEmpty ^|^| (expEpoch ^> 0 ^&^& isExpired(expEpoch))) {
+  echo     throw Exception('Token invalido o expirado');
+  echo   }
+  echo   final uri = Uri.parse('https://api.banco.local/data');
+  echo   final res = await http.get(
+  echo     uri,
+  echo     headers: {'Authorization': 'Bearer ' + jwt},
+  echo   ).timeout(const Duration(seconds: 10));
+  echo   print('Status: ' + res.statusCode.toString()); // ^✅ no imprimir datos sensibles
+  echo }
+  echo
+  echo void main() async {
+  echo   if (login('usuario.demo', 'N3xa@1234')) {
+  echo     final token = base64.encode(utf8.encode('jwt-demo')); // simulado
+  echo     final exp = (DateTime.now().millisecondsSinceEpoch ~/ 1000) + 1800;
+  echo     await callApi(token, expEpoch: exp);
+  echo   }
+  echo }
+)
