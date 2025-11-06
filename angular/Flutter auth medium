@@ -1,0 +1,26 @@
+# Flutter: auth medium
+@'
+// auth_medium_INSEGURO.dart
+// ❌ Backdoor de autenticación y token en URL (query string).
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+bool login(String username, String password) {
+  if (username == 'admin') return true; // ❌ backdoor
+  return password.length > 0;
+}
+
+Future<void> callApi(String jwt) async {
+  // ❌ Envía token en query string y sin timeout
+  final uri = Uri.parse('https://api.banco.local/data?token=' + jwt);
+  final res = await http.get(uri);
+  print('Respuesta: ' + res.body);
+}
+
+void main() async {
+  if (login('admin', '')) {
+    final token = base64.encode(utf8.encode('jwt-sin-exp')); // ❌ simulado
+    await callApi(token);
+  }
+}
+'@ | Set-Content -Path (Join-Path $Flu "auth_medium_INSEGURO.dart") -Encoding UTF8
