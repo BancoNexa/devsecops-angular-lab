@@ -1,0 +1,21 @@
+REM --- Flutter: HTTP/TLS CORREGIDO ---
+> "%FLU%\http_hard_CORREGIDO.dart" (
+  echo // http_hard_CORREGIDO.dart
+  echo // ^✅ Sin bypass TLS; usar trust store del sistema y timeouts.
+  echo // ^💡 Recomendado: certificate pinning (SPKI/hash) en apps bancarias.
+  echo import 'dart:io';
+  echo
+  echo Future^<void^> fetch() async {
+  echo   final client = HttpClient();
+  echo   client.connectionTimeout = const Duration(seconds: 10); // timeout razonable
+  echo
+  echo   final request = await client.getUrl(Uri.parse('https://api.banco.local/secure'));
+  echo   final response = await request.close().timeout(const Duration(seconds: 15));
+  echo   final content = await response.transform(SystemEncoding().decoder).join();
+  echo   print('HTTP ' + response.statusCode.toString() + ', bytes=' + content.length.toString());
+  echo }
+  echo
+  echo void main() async {
+  echo   await fetch();
+  echo }
+)
